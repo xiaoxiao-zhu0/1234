@@ -29,6 +29,7 @@ training_summary.json
 location_diagnostics.json
 
 # Temporary archives and exports
+tmp/
 *.tmp
 *.bak
 *.zip

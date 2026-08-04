@@ -141,6 +141,7 @@ input[type="range"]:disabled { cursor: not-allowed; opacity: .5; }
 .data-contract > span { color: #93aaab; font-size: 11px; }
 .data-contract div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .data-contract code { padding: 4px 7px; border-radius: 6px; background: rgba(0,0,0,.18); color: #acdfe0; font-size: 9px; }
+.simulation-note { display: block; margin-top: 12px; color: #b8cdca; font-size: 10px; line-height: 1.6; }
 
 .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 0 clamp(24px, 6vw, 96px); margin-top: -38px; position: relative; z-index: 5; }
 .metric-card { min-height: 156px; padding: 24px; background: var(--card); border: 1px solid rgba(18,52,42,.08); border-radius: 8px; box-shadow: var(--shadow); }

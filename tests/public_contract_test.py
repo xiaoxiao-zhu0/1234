@@ -27,8 +27,13 @@ class PublicContractTest(unittest.TestCase):
         self.assertEqual(len(ids), len(set(ids)))
 
     def test_shared_tree_has_no_private_directories(self):
-        forbidden = {"rbcl", "results", "server_results", "tmp", "output"}
+        forbidden = {"rbcl", "results", "server_results", "tmp", "checkpoints", "weights"}
         self.assertTrue(forbidden.isdisjoint({path.name for path in ROOT.iterdir()}))
+
+    def test_formal_report_page_reads_audited_result_only(self):
+        source = (ROOT / "frontend" / "report.js").read_text(encoding="utf-8")
+        self.assertIn("loadAuditedPublicResult", source)
+        self.assertNotIn("public_result.mock.json", source)
 
     def test_runtime_files_have_no_private_runtime_markers(self):
         forbidden = ("teacher-server", "causal_er_ace.py", "state_dict(", "torch.load(", "checkpoint_path")

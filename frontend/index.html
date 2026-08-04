@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="北斗时空索引驱动的无人机巡检局部风险诊断与复飞决策仿真原型" />
     <title>北斗巡知｜时空风险诊断原型</title>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -12,6 +13,7 @@
       <span class="pulse-dot"></span>
       <span id="evidenceStatusText">竞赛功能原型 · 仿真数据 · 非现场部署结果</span>
       <a href="./dashboard.html">查看公开结果</a>
+      <a href="./report.html">正式诊断报告</a>
     </div>
 
     <header class="site-header">
@@ -34,7 +36,7 @@
         <a href="#reflight">复飞决策</a>
       </nav>
       <button class="button button-primary" id="exportReport" type="button">
-        导出诊断报告
+        导出仿真 JSON
       </button>
     </header>
 
@@ -67,7 +69,7 @@
               <span class="section-kicker">SIMULATION CONTROL</span>
               <h2>巡检仿真控制台</h2>
             </div>
-            <span class="status-chip"><i></i>任务在线</span>
+            <span class="status-chip"><i></i>仿真运行中</span>
           </div>
 
           <label class="range-control" for="noiseRange">
@@ -101,6 +103,7 @@
               <code>timestamp</code><code>latitude</code><code>longitude</code>
               <code>location_id</code><code>position_quality</code><code>target_class</code>
             </div>
+            <small class="simulation-note">本控制台的航迹、定位扰动与交互导出均为仿真；正式实验结论请以诊断报告页为准。</small>
           </div>
         </aside>
       </section>

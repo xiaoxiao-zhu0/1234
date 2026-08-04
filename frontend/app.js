@@ -269,7 +269,7 @@ $("#exportReport").addEventListener("click", () => {
     totalReplayBudget: effectiveBudget,
     observationCount: positionedPoints.length,
     publicReleaseId: publicPayload?.release_id ?? null,
-    evidenceStatus: publicPayload?.evidence_status ?? "simulation_only",
+    evidenceStatus: "simulation_only",
   });
   const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }));
   const link = document.createElement("a");
@@ -277,7 +277,7 @@ $("#exportReport").addEventListener("click", () => {
   link.download = `beidou-inspection-report-${scenarioMeta.date}.json`;
   link.click();
   URL.revokeObjectURL(url);
-  showToast(`诊断报告已导出，证据状态：${publicPayload?.evidence_status ?? "simulation_only"}。`);
+  showToast("仿真诊断 JSON 已导出，仅用于交互演示，不作为正式实验结论。");
 });
 
 loadPublicResult()

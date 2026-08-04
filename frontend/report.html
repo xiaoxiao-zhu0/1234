@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="北斗无人机巡检时空局部风险正式诊断报告" />
+    <title>北斗巡知｜正式诊断报告</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./report.css" />
+  </head>
+  <body>
+    <div class="screen-toolbar" aria-label="报告操作">
+      <div>
+        <a href="./dashboard.html">返回结果看板</a>
+        <span>正式证据报告</span>
+      </div>
+      <div>
+        <button id="downloadJson" type="button" disabled>下载证据 JSON</button>
+        <button id="printReport" class="primary" type="button" disabled>打印 / 保存 PDF</button>
+      </div>
+    </div>
+
+    <main class="report-shell" id="reportRoot" aria-busy="true">
+      <header class="report-header">
+        <div class="brand-line">
+          <span class="brand-mark">BD</span>
+          <div><b>北斗巡知</b><small>BEIDOU INSIGHT</small></div>
+        </div>
+        <div class="report-id"><span>报告编号</span><b id="releaseId">读取中</b></div>
+        <p class="overline">北斗时空信息 × 低空巡检 × 类别增量持续学习</p>
+        <h1>无人机巡检时空局部风险<br />正式诊断报告</h1>
+        <p class="lead">基于公开航拍数据预测结果与虚拟北斗时空索引，评估类别增量学习方法的识别稳定性、区域遗忘风险和有限回放预算分配。</p>
+        <div class="evidence-strip" id="evidenceStrip">
+          <div><span>证据状态</span><b id="evidenceStatus">核验中</b></div>
+          <div><span>结果质量</span><b id="qualityStatus">核验中</b></div>
+          <div><span>生成时间</span><b id="generatedAt">核验中</b></div>
+        </div>
+      </header>
+
+      <section class="report-section" id="executiveSection">
+        <div class="section-number">01</div>
+        <div class="section-content">
+          <span class="kicker">EXECUTIVE DIAGNOSIS</span>
+          <h2>诊断结论</h2>
+          <div class="finding-grid">
+            <article class="finding primary-finding">
+              <span>主方法最终识别率</span><strong id="primaryAccuracy">-</strong><small id="accuracyComparison">-</small>
+            </article>
+            <article class="finding">
+              <span>平均遗忘率</span><strong id="primaryForgetting">-</strong><small id="forgettingComparison">-</small>
+            </article>
+            <article class="finding">
+              <span>首要风险区域</span><strong id="topRiskName">-</strong><small id="topRiskDetail">-</small>
+            </article>
+          </div>
+          <div class="diagnosis-box">
+            <h3>自动诊断摘要</h3>
+            <p id="diagnosisSummary">正在依据正式结果文件生成诊断。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="section-number">02</div>
+        <div class="section-content">
+          <span class="kicker">DATA AND PROTOCOL</span>
+          <h2>数据与验证协议</h2>
+          <dl class="protocol-grid">
+            <div><dt>数据集与场景</dt><dd id="datasetName">-</dd></div>
+            <div><dt>公开预测数量</dt><dd id="predictionCount">-</dd></div>
+            <div><dt>类别增量设置</dt><dd id="taskProtocol">-</dd></div>
+            <div><dt>固定回放预算</dt><dd id="budgetProtocol">-</dd></div>
+          </dl>
+          <p class="method-note">报告中的模型准确率、宏平均准确率与遗忘率来自正式公开结果文件；区域名称、北斗坐标、定位误差与航线属于仿真时空标签，用于验证局部诊断和任务调度流程。</p>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="section-number">03</div>
+        <div class="section-content">
+          <span class="kicker">METHOD COMPARISON</span>
+          <h2>方法对比</h2>
+          <div class="comparison-table-wrap">
+            <table class="comparison-table">
+              <thead><tr><th>方法</th><th>最终识别率</th><th>宏平均识别率</th><th>平均遗忘率</th><th>结论</th></tr></thead>
+              <tbody id="methodRows"></tbody>
+            </table>
+          </div>
+          <div class="metric-bars" id="metricBars"></div>
+        </div>
+      </section>
+
+      <section class="report-section page-break-before">
+        <div class="section-number">04</div>
+        <div class="section-content">
+          <span class="kicker">LOCATION-SPECIFIC DIAGNOSTICS</span>
+          <h2>分区域时空诊断</h2>
+          <p class="section-intro">区域风险按模型不稳定性与业务后果综合排序，用于确定补采、复飞和回放资源优先级。</p>
+          <div class="regional-table-wrap">
+            <table class="regional-table">
+              <thead>
+                <tr><th>区域</th><th>样本</th><th>识别率</th><th>历史峰值</th><th>遗忘率</th><th>平均定位误差</th><th>风险</th><th>预算</th><th>处置建议</th></tr>
+              </thead>
+              <tbody id="locationRows"></tbody>
+            </table>
+          </div>
+          <div class="priority-callout">
+            <div><span>前三风险区域</span><b id="priorityRegions">-</b></div>
+            <div><span>预算占比</span><b id="priorityBudgetShare">-</b></div>
+            <div><span>预算核验</span><b id="budgetConservation">-</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="section-number">05</div>
+        <div class="section-content">
+          <span class="kicker">DECISION RECOMMENDATIONS</span>
+          <h2>巡检决策建议</h2>
+          <ol class="recommendations" id="recommendations"></ol>
+        </div>
+      </section>
+
+      <section class="evidence-boundary">
+        <div>
+          <span class="kicker">EVIDENCE BOUNDARY</span>
+          <h2>证据边界与使用说明</h2>
+        </div>
+        <p id="disclosure">-</p>
+        <ul>
+          <li>本报告不代表真实外业飞行、机载部署、真实北斗终端精度或商业客户验收结果。</li>
+          <li>仿真交互页的参数调整与导出文件始终标记为 simulation_only，不覆盖本报告的正式证据。</li>
+          <li>后续训练结果应通过数据契约更新，经字段校验和预算守恒检查后再进入本报告。</li>
+        </ul>
+      </section>
+
+      <footer class="report-footer">
+        <span>第十五届中国创新创业大赛北斗时空信息专业赛 · 竞赛验证材料</span>
+        <span id="footerRelease">-</span>
+      </footer>
+
+      <div class="report-error" id="reportError" hidden>
+        <h2>正式结果读取失败</h2><p id="errorMessage"></p>
+      </div>
+    </main>
+    <script type="module" src="./report.js"></script>
+  </body>
+</html>

@@ -58,6 +58,16 @@ export async function loadPublicResult() {
   throw lastError ?? new Error("no public result file is available");
 }
 
+export async function loadAuditedPublicResult() {
+  const response = await fetch("../data_contract/public_result.json", { cache: "no-store" });
+  if (!response.ok) throw new Error(`正式结果读取失败（HTTP ${response.status}）`);
+  const payload = validatePublicResult(await response.json());
+  if (payload.evidence_status !== "prediction_backed") {
+    throw new Error("正式诊断报告要求 prediction_backed 证据状态");
+  }
+  return payload;
+}
+
 export function overlayPublicLocations(allocated, payload) {
   if (!payload || payload.evidence_status === "simulation_only") return allocated;
   const index = new Map(payload.locations.map((location) => [location.location_id, location]));

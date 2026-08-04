@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   evidenceLabel,
+  loadAuditedPublicResult,
   overlayPublicLocations,
   validatePublicResult,
 } from "../frontend/public-result.js";
@@ -49,4 +50,14 @@ test("prediction-backed public fields overlay display data only", async () => {
   assert.equal(result[0].currentAccuracy, 0.8);
   assert.equal(result[0].budget, 32);
   assert.equal(result[0].actionCode, "high");
+});
+
+test("formal report loader is exported for the audited result path", () => {
+  assert.equal(typeof loadAuditedPublicResult, "function");
+});
+
+test("simulation export cannot inherit formal evidence status", async () => {
+  const source = await readFile(new URL("../frontend/app.js", import.meta.url), "utf8");
+  assert.match(source, /evidenceStatus:\s*"simulation_only"/);
+  assert.doesNotMatch(source, /evidenceStatus:\s*publicPayload/);
 });
