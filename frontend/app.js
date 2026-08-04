@@ -1,18 +1,26 @@
-import { buildRoutePoints, regions, scenarioMeta } from "./scenario.mjs";
+import { buildRoutePoints, regions, scenarioMeta } from "./scenario.js";
 import {
   allocateRiskBudget,
   buildReport,
   computeDiagnostics,
   computeSummary,
   perturbRoutePoints,
-} from "./logic.mjs";
+} from "./logic.js";
+import {
+  evidenceLabel,
+  loadPublicResult,
+  overlayPublicLocations,
+} from "./public-result.js";
 
 const routePoints = buildRoutePoints();
 const state = { noiseMeters: 12, totalBudget: 240, selectedRegionId: "G02" };
+let publicPayload = null;
+let publicLoadError = null;
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const pct = (value, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const riskScore = (value) => Math.round(value * 100);
+const formalEvidence = () => publicPayload && publicPayload.evidence_status !== "simulation_only";
 
 function riskColor(risk, alpha = 1) {
   if (risk >= 0.55) return `rgba(216, 95, 74, ${alpha})`;
@@ -36,6 +44,7 @@ function centerCoordinate(region) {
 }
 
 function buildState() {
+  const effectiveBudget = formalEvidence() ? publicPayload.budget.total : state.totalBudget;
   const positionedPoints = perturbRoutePoints(
     routePoints,
     state.noiseMeters,
@@ -43,9 +52,10 @@ function buildState() {
     scenarioMeta.mapHeightMeters,
   );
   const diagnostics = computeDiagnostics(regions, positionedPoints);
-  const allocated = allocateRiskBudget(diagnostics, state.totalBudget);
-  const summary = computeSummary(allocated, positionedPoints, state.totalBudget);
-  return { positionedPoints, allocated, summary };
+  const simulatedAllocation = allocateRiskBudget(diagnostics, effectiveBudget);
+  const allocated = overlayPublicLocations(simulatedAllocation, publicPayload);
+  const summary = computeSummary(allocated, positionedPoints, effectiveBudget);
+  return { positionedPoints, allocated, summary, effectiveBudget };
 }
 
 function renderMap(allocated, points) {
@@ -157,7 +167,7 @@ function renderBudget(allocated, summary) {
     <div class="budget-row" title="${region.name}：风险配额 ${region.budget}，均匀配额 ${region.uniformBudget}">
       <span>${region.id}</span><div class="budget-track"><i class="budget-fill" style="width:${(region.budget / maximum) * 100}%"></i><i class="uniform-marker" style="left:${(region.uniformBudget / maximum) * 100}%"></i></div><b>${region.budget}</b>
     </div>`).join("");
-  $("#budgetTotal").textContent = state.totalBudget;
+  $("#budgetTotal").textContent = formalEvidence() ? publicPayload.budget.total : state.totalBudget;
   $("#highRiskShare").textContent = pct(summary.highRiskBudgetShare, 0);
 }
 
@@ -182,12 +192,28 @@ function renderMetrics(summary, points) {
   $("#topRiskHint").textContent = `风险 ${riskScore(summary.topRiskRegion.risk)} · ${summary.topRiskRegion.action}`;
 }
 
+function renderEvidenceState() {
+  const statusText = publicLoadError
+    ? `公开结果读取失败：${publicLoadError.message}`
+    : evidenceLabel(publicPayload);
+  $("#evidenceStatusText").textContent = statusText;
+  $("#prototypeRibbon").dataset.status = publicPayload?.evidence_status ?? "simulation_only";
+  $("#resultSourceHint").textContent = publicPayload
+    ? `当前读取：${publicPayload.release_id} · ${publicPayload.contract_version}`
+    : "当前读取：内置仿真参数";
+  $("#budgetRange").disabled = formalEvidence();
+  $("#budgetControlHint").textContent = formalEvidence()
+    ? "正式结果模式下使用公开JSON中的预算总量"
+    : "固定总量，仅改变区域间配额";
+}
+
 function render() {
-  const { positionedPoints, allocated, summary } = buildState();
+  const { positionedPoints, allocated, summary, effectiveBudget } = buildState();
   $("#noiseValue").textContent = `${state.noiseMeters} m`;
-  $("#budgetValue").textContent = `${state.totalBudget} slots`;
+  $("#budgetValue").textContent = `${effectiveBudget} slots`;
   $("#noiseRange").value = state.noiseMeters;
   $("#budgetRange").value = state.totalBudget;
+  renderEvidenceState();
   renderMetrics(summary, positionedPoints);
   renderMap(allocated, positionedPoints);
   renderSelected(allocated);
@@ -237,11 +263,13 @@ $("#focusCritical").addEventListener("click", () => {
 });
 
 $("#exportReport").addEventListener("click", () => {
-  const { positionedPoints, allocated, summary } = buildState();
+  const { positionedPoints, allocated, summary, effectiveBudget } = buildState();
   const report = buildReport(scenarioMeta, allocated, summary, {
     positioningNoiseMeters: state.noiseMeters,
-    totalReplayBudget: state.totalBudget,
+    totalReplayBudget: effectiveBudget,
     observationCount: positionedPoints.length,
+    publicReleaseId: publicPayload?.release_id ?? null,
+    evidenceStatus: publicPayload?.evidence_status ?? "simulation_only",
   });
   const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }));
   const link = document.createElement("a");
@@ -249,8 +277,16 @@ $("#exportReport").addEventListener("click", () => {
   link.download = `beidou-inspection-report-${scenarioMeta.date}.json`;
   link.click();
   URL.revokeObjectURL(url);
-  showToast("诊断报告已导出，文件中保留 simulation_only 标识。");
+  showToast(`诊断报告已导出，证据状态：${publicPayload?.evidence_status ?? "simulation_only"}。`);
 });
 
-render();
-
+loadPublicResult()
+  .then((payload) => {
+    publicPayload = payload;
+    if (formalEvidence()) state.totalBudget = payload.budget.total;
+  })
+  .catch((error) => {
+    publicLoadError = error;
+    console.error(error);
+  })
+  .finally(render);

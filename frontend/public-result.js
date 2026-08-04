@@ -18,6 +18,11 @@ export function validatePublicResult(payload) {
     throw new Error("primary_method is absent from methods");
   }
   if (payload.budget.total !== payload.budget.allocated_sum) throw new Error("replay budget is not conserved");
+  payload.methods.forEach((method) => {
+    assertFiniteProbability(method.average_accuracy, `${method.name}.average_accuracy`);
+    if ("macro_accuracy" in method) assertFiniteProbability(method.macro_accuracy, `${method.name}.macro_accuracy`);
+    assertFiniteProbability(method.average_forgetting, `${method.name}.average_forgetting`);
+  });
   if (payload.quality) {
     assertFiniteProbability(payload.quality.chance_accuracy, "quality.chance_accuracy", false);
     assertFiniteProbability(payload.quality.primary_accuracy, "quality.primary_accuracy", false);

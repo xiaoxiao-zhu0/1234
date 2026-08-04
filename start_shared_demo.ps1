@@ -11,4 +11,5 @@ Write-Host "访问地址: $url" -ForegroundColor Green
 Write-Host "请保持此窗口开启；按 Ctrl+C 停止服务。" -ForegroundColor Yellow
 Write-Host ""
 
-python (Join-Path $shareRoot "serve.py") --port $Port --directory $shareRoot
+python -m http.server $Port --bind 127.0.0.1 --directory $shareRoot
+

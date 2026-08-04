@@ -1,4 +1,4 @@
-import { regionAt } from "./scenario.mjs";
+import { regionAt } from "./scenario.js";
 
 export const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
@@ -122,7 +122,7 @@ export function computeSummary(allocatedDiagnostics, positionedPoints, totalBudg
 export function buildReport(meta, diagnostics, summary, settings) {
   return {
     generatedAt: new Date().toISOString(),
-    prototypeStatus: "simulation_only",
+    prototypeStatus: settings.evidenceStatus ?? "simulation_only",
     disclaimer: meta.disclaimer,
     scenario: {
       name: meta.name,
@@ -152,4 +152,3 @@ export function buildReport(meta, diagnostics, summary, settings) {
     })),
   };
 }
-

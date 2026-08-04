@@ -6,7 +6,7 @@
 
 - `frontend/index.html`
 - `frontend/styles.css`
-- `frontend/app.mjs`
+- `frontend/app.js`
 - `assets/`
 - `docs/`
 
@@ -16,9 +16,9 @@
 
 ## 联调方式
 
-1. `public_result.json`是当前审核通过的正式只读结果；
-2. `public_result.mock.json`只用于开发空值、加载失败和仿真状态；
-3. 队员不得用mock覆盖正式文件，也不得在前端重新计算指标；
+1. 平时使用`public_result.mock.json`；
+2. mock中的空指标会保留页面现有仿真值；
+3. 出现实验结果后，算法负责人提供`public_result.json`；
 4. 页面自动优先读取正式文件，无需队员修改算法逻辑；
 5. `prediction_backed`只表示指标来自模型预测，不代表真实北斗外业或机载部署。
 

@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="prototype-ribbon">
+    <div class="prototype-ribbon" id="prototypeRibbon">
       <span class="pulse-dot"></span>
-      竞赛功能原型 · 仿真数据 · 非现场部署结果
+      <span id="evidenceStatusText">竞赛功能原型 · 仿真数据 · 非现场部署结果</span>
+      <a href="./dashboard.html">查看公开结果</a>
     </div>
 
     <header class="site-header">
@@ -41,10 +42,10 @@
       <section class="hero" id="overview">
         <div class="hero-copy">
           <div class="eyebrow"><span>北斗时空信息 × 低空巡检 × 持续学习</span></div>
-          <h1>让模型失效，<br /><em>在地图上被看见。</em></h1>
+          <h1>北斗时空索引，<br /><em>定位模型局部失效。</em></h1>
           <p>
-            将每次航拍观测绑定北斗时间与位置，按区域诊断识别退化，依据
-            <strong>模型不稳定性 × 区域业务后果</strong>分配有限回放预算，并生成重点复飞与人工复核清单。
+            将航拍观测绑定北斗时间、位置与区域网格，持续追踪识别退化位置，依据
+            <strong>模型不稳定性 × 区域业务后果</strong>调度有限回放预算，并输出重点复飞与人工复核任务。
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#risk-map">查看巡检态势</a>
@@ -84,7 +85,7 @@
               <output id="budgetValue">240 slots</output>
             </span>
             <input id="budgetRange" type="range" min="80" max="480" step="8" value="240" />
-            <small>固定总量，仅改变区域间配额</small>
+            <small id="budgetControlHint">固定总量，仅改变区域间配额</small>
           </label>
 
           <fieldset class="preset-group">
@@ -95,7 +96,7 @@
           </fieldset>
 
           <div class="data-contract">
-            <span>数据字段已接入</span>
+            <span id="resultSourceHint">当前读取：公开结果契约</span>
             <div>
               <code>timestamp</code><code>latitude</code><code>longitude</code>
               <code>location_id</code><code>position_quality</code><code>target_class</code>
@@ -232,7 +233,7 @@
               <div><span class="section-kicker">BUDGET ALLOCATION</span><h3>风险预算调度</h3></div>
               <strong id="budgetTotal">240</strong>
             </div>
-            <p>橙色为风险预算，灰色刻度为同总量均匀分配。</p>
+            <p>绿色为风险预算，灰色刻度为同总量均匀分配。</p>
             <div class="budget-bars" id="budgetBars"></div>
             <div class="budget-summary">
               <span>前三高风险区获得</span>
@@ -268,7 +269,7 @@
         <div class="integrity-icon">i</div>
         <div>
           <b>证据边界说明</b>
-          <p>本页面验证的是时空元数据接入、区域诊断、定位噪声影响和风险预算决策闭环；不宣称已完成机载部署、因果表征解耦或真实北斗巡检性能提升。</p>
+          <p>本页面验证的是北斗时空元数据接入、区域诊断、定位噪声影响和风险预算决策闭环；不宣称已完成真实外业、机载部署或未经公开结果文件支持的性能提升。</p>
         </div>
       </section>
     </main>
@@ -276,11 +277,10 @@
     <footer>
       <div class="brand footer-brand"><span class="brand-mark"></span><span><strong>北斗巡知</strong><small>竞赛功能原型</small></span></div>
       <p>第十五届中国创新创业大赛北斗时空信息专业赛 · 仿真验证版本</p>
-      <span>Built on Avalanche / RBCL research assets</span>
+      <span>公开展示包 · 不包含私有训练源码与模型权重</span>
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.mjs"></script>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
-

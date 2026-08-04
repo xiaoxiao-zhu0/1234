@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="北斗巡知公开实验结果看板" />
-    <link rel="icon" href="data:," />
     <title>北斗巡知｜公开结果看板</title>
     <link rel="stylesheet" href="./dashboard.css" />
   </head>
@@ -14,9 +13,13 @@
       <div>
         <span class="kicker">BEIDOU INSIGHT · PUBLIC EVIDENCE</span>
         <h1>时空局部诊断<br /><em>公开结果看板</em></h1>
-        <p>页面只读取白名单JSON，不包含模型、损失函数、回放采样、权重或训练环境。</p>
+        <p>面向北斗无人机巡检的公开证据页，只展示白名单JSON中的数据规模、方法指标、区域风险、回放预算和处置建议。</p>
       </div>
-      <nav><a href="./index.html">进入仿真交互页</a></nav>
+      <nav class="page-actions" aria-label="页面操作">
+        <a class="button-link primary" href="./index.html">进入仿真交互页</a>
+        <button id="refreshResult" type="button">重新读取</button>
+        <button id="downloadResult" type="button">下载公开JSON</button>
+      </nav>
     </header>
 
     <main>
@@ -25,10 +28,11 @@
         <article><span>观测 / 预测</span><b id="sampleCounts">—</b><small>公开接口计数</small></article>
         <article><span>类别 / 任务</span><b id="taskCounts">—</b><small>类别增量任务流</small></article>
         <article><span>回放预算</span><b id="budgetTotal">—</b><small id="budgetCheck">等待核验</small></article>
+        <article><span>结果质量</span><b id="qualityStatus">—</b><small id="qualityDelta">等待核验</small></article>
       </section>
 
       <section class="panel">
-        <div class="heading"><div><span class="kicker">METHOD COMPARISON</span><h2>方法级指标</h2></div><small>空值表示尚无真实模型证据</small></div>
+        <div class="heading"><div><span class="kicker">METHOD COMPARISON</span><h2>方法级指标</h2></div><small id="methodHint">读取仓库公开结果</small></div>
         <div class="methods" id="methods"></div>
       </section>
 
@@ -44,6 +48,6 @@
 
       <section class="disclosure"><b>证据边界</b><p id="disclosure">—</p></section>
     </main>
-    <script type="module" src="./dashboard.mjs"></script>
+    <script type="module" src="./dashboard.js"></script>
   </body>
 </html>
