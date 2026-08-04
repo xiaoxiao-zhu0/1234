@@ -1,0 +1,37 @@
+{
+  "contract_version": "1.0",
+  "release_id": "simulation-interface-v1",
+  "generated_at": "2026-08-03T12:00:00+08:00",
+  "evidence_status": "simulation_only",
+  "primary_method": "Interface Mock",
+  "dataset": {
+    "name": "北斗巡检前端接口演示数据",
+    "metadata_count": 0,
+    "prediction_count": 0,
+    "class_count": 0,
+    "task_count": 0
+  },
+  "budget": {
+    "total": 240,
+    "allocated_sum": 240
+  },
+  "methods": [
+    {
+      "name": "Interface Mock",
+      "average_accuracy": null,
+      "average_forgetting": null
+    }
+  ],
+  "locations": [
+    {"location_id": "G01", "name": "输电走廊", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.96, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G02", "name": "山区边坡", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.93, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G03", "name": "河谷跨越", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.86, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G04", "name": "城郊围栏", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.71, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G05", "name": "光伏场站", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.82, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G06", "name": "通信塔区", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.90, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G07", "name": "施工扰动区", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.88, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"},
+    {"location_id": "G08", "name": "农田缓冲区", "sample_count": 0, "accuracy": null, "previous_accuracy": null, "forgetting": null, "position_error_mean_m": null, "position_quality_mean": null, "instability": null, "business_consequence": 0.42, "risk": null, "replay_budget": null, "recommended_action": null, "evidence_status": "simulation_only"}
+  ],
+  "disclosure": "本文件仅用于前端开发。坐标、路线和界面指标均为仿真，不代表真实模型性能。"
+}
+

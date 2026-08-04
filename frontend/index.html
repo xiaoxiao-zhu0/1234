@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="北斗时空索引驱动的无人机巡检局部风险诊断与复飞决策仿真原型" />
+    <title>北斗巡知｜时空风险诊断原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-ribbon">
+      <span class="pulse-dot"></span>
+      竞赛功能原型 · 仿真数据 · 非现场部署结果
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#overview" aria-label="返回总览">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M24 4 29 18 44 18 32 27 36 42 24 33 12 42 16 27 4 18 19 18Z" />
+            <circle cx="24" cy="24" r="4" />
+          </svg>
+        </span>
+        <span>
+          <strong>北斗巡知</strong>
+          <small>BEIDOU INSIGHT</small>
+        </span>
+      </a>
+      <nav aria-label="主要导航">
+        <a href="#overview">任务总览</a>
+        <a href="#risk-map">时空风险图</a>
+        <a href="#diagnostics">局部诊断</a>
+        <a href="#reflight">复飞决策</a>
+      </nav>
+      <button class="button button-primary" id="exportReport" type="button">
+        导出诊断报告
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="overview">
+        <div class="hero-copy">
+          <div class="eyebrow"><span>北斗时空信息 × 低空巡检 × 持续学习</span></div>
+          <h1>让模型失效，<br /><em>在地图上被看见。</em></h1>
+          <p>
+            将每次航拍观测绑定北斗时间与位置，按区域诊断识别退化，依据
+            <strong>模型不稳定性 × 区域业务后果</strong>分配有限回放预算，并生成重点复飞与人工复核清单。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#risk-map">查看巡检态势</a>
+            <button class="button button-ghost" id="focusCritical" type="button">定位最高风险区</button>
+          </div>
+          <div class="system-proof">
+            <span>北斗不可替代功能</span>
+            <ul>
+              <li>跨架次时空索引</li>
+              <li>区域失效归因</li>
+              <li>复飞任务定位</li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="control-deck" aria-label="仿真参数">
+          <div class="deck-header">
+            <div>
+              <span class="section-kicker">SIMULATION CONTROL</span>
+              <h2>巡检仿真控制台</h2>
+            </div>
+            <span class="status-chip"><i></i>任务在线</span>
+          </div>
+
+          <label class="range-control" for="noiseRange">
+            <span>
+              <b>北斗定位扰动</b>
+              <output id="noiseValue">12 m</output>
+            </span>
+            <input id="noiseRange" type="range" min="0" max="40" step="1" value="12" />
+            <small>影响图像—区域关联，不直接改变图像视觉特征</small>
+          </label>
+
+          <label class="range-control" for="budgetRange">
+            <span>
+              <b>总回放预算</b>
+              <output id="budgetValue">240 slots</output>
+            </span>
+            <input id="budgetRange" type="range" min="80" max="480" step="8" value="240" />
+            <small>固定总量，仅改变区域间配额</small>
+          </label>
+
+          <fieldset class="preset-group">
+            <legend>快速场景</legend>
+            <button type="button" data-preset="clear">开阔区</button>
+            <button type="button" data-preset="mountain" class="active">山区遮挡</button>
+            <button type="button" data-preset="degraded">定位退化</button>
+          </fieldset>
+
+          <div class="data-contract">
+            <span>数据字段已接入</span>
+            <div>
+              <code>timestamp</code><code>latitude</code><code>longitude</code>
+              <code>location_id</code><code>position_quality</code><code>target_class</code>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="metric-grid" aria-label="任务关键指标">
+        <article class="metric-card">
+          <div class="metric-icon cyan">01</div>
+          <span>区域平均识别率</span>
+          <strong id="averageAccuracy">—</strong>
+          <small>8 个时空网格宏平均</small>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon amber">02</div>
+          <span>加权遗忘率</span>
+          <strong id="weightedForgetting">—</strong>
+          <small>按区域样本量加权</small>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon green">03</div>
+          <span>位置关联正确率</span>
+          <strong id="associationAccuracy">—</strong>
+          <small id="associationHint">—</small>
+        </article>
+        <article class="metric-card alert-card">
+          <div class="metric-icon red">04</div>
+          <span>最高风险区域</span>
+          <strong id="topRiskRegion">—</strong>
+          <small id="topRiskHint">—</small>
+        </article>
+      </section>
+
+      <section class="section-block map-section" id="risk-map">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">SPATIOTEMPORAL RISK MAP</span>
+            <h2>时空局部风险态势</h2>
+            <p>实线为受定位扰动影响后的观测航迹，虚线为仿真真值航迹；点击网格查看诊断。</p>
+          </div>
+          <div class="legend" aria-label="风险图例">
+            <span><i class="low"></i>常规</span>
+            <span><i class="medium"></i>关注</span>
+            <span><i class="high"></i>高风险</span>
+            <span><i class="critical"></i>紧急</span>
+          </div>
+        </div>
+
+        <div class="map-layout">
+          <div class="map-card">
+            <div class="map-toolbar">
+              <div><span class="live-dot"></span><b>巡检架次 BD-20260803-01</b></div>
+              <span id="mapTimestamp">08:00—10:12 · 仿真</span>
+            </div>
+            <svg id="patrolMap" viewBox="0 0 1000 680" role="img" aria-label="北斗无人机巡检航线与区域风险地图"></svg>
+            <div class="map-footer">
+              <span><b>坐标系</b> WGS84（仿真）</span>
+              <span><b>覆盖范围</b> 1.2 km × 0.8 km</span>
+              <span><b>区域数</b> 8</span>
+            </div>
+          </div>
+
+          <aside class="region-detail" id="regionDetail" aria-live="polite">
+            <div class="detail-top">
+              <div>
+                <span class="region-id" id="selectedId">—</span>
+                <h3 id="selectedName">请选择区域</h3>
+                <p id="selectedScene">—</p>
+              </div>
+              <div class="risk-gauge" id="riskGauge"><strong id="selectedRisk">—</strong><small>区域风险</small></div>
+            </div>
+
+            <div class="coordinate-readout">
+              <span>北斗中心坐标</span>
+              <code id="selectedCoordinate">—</code>
+              <small id="selectedInspection">—</small>
+            </div>
+
+            <div class="factor-list">
+              <div><span>局部遗忘</span><div><i id="forgettingBar"></i></div><b id="selectedForgetting">—</b></div>
+              <div><span>预测不确定性</span><div><i id="uncertaintyBar"></i></div><b id="selectedUncertainty">—</b></div>
+              <div><span>位置关联扰动</span><div><i id="positionBar"></i></div><b id="selectedPosition">—</b></div>
+              <div><span>业务后果</span><div><i id="consequenceBar"></i></div><b id="selectedConsequence">—</b></div>
+            </div>
+
+            <div class="detail-stats">
+              <div><span>区域识别率</span><strong id="selectedAccuracy">—</strong></div>
+              <div><span>回放配额</span><strong id="selectedBudget">—</strong></div>
+              <div><span>目标资产</span><strong id="selectedAssets">—</strong></div>
+              <div><span>定位质量</span><strong id="selectedQuality">—</strong></div>
+            </div>
+
+            <div class="action-box" id="selectedActionBox">
+              <span>系统建议</span>
+              <strong id="selectedAction">—</strong>
+              <p id="selectedClasses">—</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section-block" id="diagnostics">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">LOCATION-SPECIFIC DIAGNOSTICS</span>
+            <h2>分区域模型失效诊断</h2>
+            <p>全局平均值之外，逐区域报告遗忘、定位错配与有限回放资源去向。</p>
+          </div>
+          <div class="formula-chip"><span>区域风险</span><b>=</b><span>模型不稳定性</span><b>×</b><span>业务后果</span></div>
+        </div>
+
+        <div class="diagnostic-layout">
+          <div class="table-card">
+            <div class="table-toolbar">
+              <b>区域诊断清单</b>
+              <span>按风险从高到低排序</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>区域</th><th>识别率</th><th>遗忘</th><th>位置错配</th><th>风险</th><th>回放配额</th><th>处置</th>
+                  </tr>
+                </thead>
+                <tbody id="diagnosticRows"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <aside class="budget-card">
+            <div class="budget-heading">
+              <div><span class="section-kicker">BUDGET ALLOCATION</span><h3>风险预算调度</h3></div>
+              <strong id="budgetTotal">240</strong>
+            </div>
+            <p>橙色为风险预算，灰色刻度为同总量均匀分配。</p>
+            <div class="budget-bars" id="budgetBars"></div>
+            <div class="budget-summary">
+              <span>前三高风险区获得</span>
+              <strong id="highRiskShare">—</strong>
+              <small>总回放预算</small>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section-block reflight-section" id="reflight">
+        <div class="section-heading inverse">
+          <div>
+            <span class="section-kicker">MISSION DECISION LOOP</span>
+            <h2>重点复飞与人工复核队列</h2>
+            <p>把算法诊断转换成可执行任务，而不是停留在全局准确率报表。</p>
+          </div>
+          <span class="mission-count"><b id="missionCount">0</b> 个重点任务</span>
+        </div>
+        <div class="mission-grid" id="missionGrid"></div>
+        <div class="loop-strip" aria-label="系统闭环">
+          <div><span>01</span><b>北斗时空索引</b><small>图像—位置—时间绑定</small></div>
+          <i></i>
+          <div><span>02</span><b>持续更新</b><small>新增类别经人工确认</small></div>
+          <i></i>
+          <div><span>03</span><b>局部诊断</b><small>识别薄弱地理区域</small></div>
+          <i></i>
+          <div><span>04</span><b>风险调度</b><small>分配回放与复飞资源</small></div>
+        </div>
+      </section>
+
+      <section class="integrity-note">
+        <div class="integrity-icon">i</div>
+        <div>
+          <b>证据边界说明</b>
+          <p>本页面验证的是时空元数据接入、区域诊断、定位噪声影响和风险预算决策闭环；不宣称已完成机载部署、因果表征解耦或真实北斗巡检性能提升。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand footer-brand"><span class="brand-mark"></span><span><strong>北斗巡知</strong><small>竞赛功能原型</small></span></div>
+      <p>第十五届中国创新创业大赛北斗时空信息专业赛 · 仿真验证版本</p>
+      <span>Built on Avalanche / RBCL research assets</span>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>
+

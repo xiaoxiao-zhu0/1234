@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>北斗巡知申报产品图</title>
+    <style>
+      :root {
+        --ink: #16383c;
+        --muted: #63777a;
+        --paper: #eef2ee;
+        --surface: #ffffff;
+        --line: #d7e0dc;
+        --teal: #086b73;
+        --green: #3d8e70;
+        --amber: #d59b32;
+        --orange: #dc7940;
+        --red: #c95045;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 1600px; height: 1000px; margin: 0; overflow: hidden; }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+        letter-spacing: 0;
+      }
+      .board { width: 1600px; height: 1000px; padding: 42px 52px 30px; display: grid; grid-template-rows: 104px 1fr 92px; gap: 20px; }
+      header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+      .brand { display: flex; align-items: center; gap: 18px; }
+      .mark { width: 64px; height: 64px; display: grid; place-items: center; background: var(--teal); color: #fff; font-size: 30px; font-weight: 800; border-radius: 8px; }
+      h1 { margin: 0; font-size: 38px; line-height: 1.1; font-weight: 800; }
+      header p { margin: 9px 0 0; color: var(--muted); font-size: 16px; }
+      .badges { display: flex; gap: 10px; align-items: center; }
+      .badge { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 10px 14px; font-size: 14px; font-weight: 700; }
+      .badge.live { color: var(--teal); border-color: #8ebfc0; }
+      main { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; min-height: 0; }
+      .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; min-height: 0; overflow: hidden; }
+      .panel-head { height: 72px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+      .eyebrow { color: var(--teal); font-size: 12px; font-weight: 800; }
+      h2 { margin: 4px 0 0; font-size: 22px; }
+      .panel-head small { color: var(--muted); font-size: 12px; }
+      .map-panel { display: grid; grid-template-rows: 72px 1fr 126px; }
+      .map { position: relative; margin: 18px 22px 0; border: 1px solid var(--line); background: #f6f8f5; overflow: hidden; }
+      .map::before, .map::after { content: ""; position: absolute; background: #dfe6e2; }
+      .map::before { width: 1px; top: 0; bottom: 0; left: 50%; }
+      .map::after { height: 1px; left: 0; right: 0; top: 50%; }
+      .zones { position: absolute; inset: 14px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 12px; z-index: 2; }
+      .zone { position: relative; border: 1px solid #cddad4; background: rgba(255,255,255,.88); padding: 14px; min-width: 0; }
+      .zone strong { display: block; font-size: 15px; }
+      .zone span { display: block; margin-top: 7px; font-size: 12px; color: var(--muted); }
+      .zone i { position: absolute; right: 12px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+      .zone[data-level="watch"] i { background: var(--amber); }
+      .zone[data-level="high"] i { background: var(--orange); }
+      .zone[data-level="critical"] i { background: var(--red); }
+      .route { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+      .route polyline { fill: none; stroke: var(--teal); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .route circle { fill: #fff; stroke: var(--teal); stroke-width: 3; }
+      .drone { position: absolute; right: 36px; bottom: 34px; z-index: 4; width: 42px; height: 42px; display: grid; place-items: center; background: var(--ink); color: #fff; border-radius: 50%; font-size: 18px; font-weight: 800; border: 4px solid #fff; }
+      .north { position: absolute; right: 16px; bottom: 15px; z-index: 4; color: var(--muted); font-size: 12px; font-weight: 800; }
+      .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px 22px 20px; }
+      .metric { border-left: 4px solid var(--teal); padding: 8px 14px; background: #f7f9f6; }
+      .metric span { color: var(--muted); font-size: 12px; }
+      .metric b { display: block; margin-top: 6px; font-size: 28px; }
+      .metric small { color: var(--muted); font-size: 11px; }
+      .right { display: grid; grid-template-rows: 270px 1fr; gap: 20px; min-height: 0; }
+      .methods { padding: 20px 24px; }
+      .method { display: grid; grid-template-columns: 180px 1fr 64px; gap: 14px; align-items: center; margin-bottom: 18px; }
+      .method label { font-size: 14px; font-weight: 700; }
+      .track { height: 22px; background: #e8eeea; position: relative; }
+      .bar { height: 100%; background: #758f91; }
+      .method.primary .bar { background: var(--teal); }
+      .method b { text-align: right; font-size: 18px; }
+      .uplift { margin-top: 7px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 14px; }
+      .uplift span { color: var(--muted); font-size: 13px; }
+      .uplift b { color: var(--teal); font-size: 28px; }
+      .regions { padding: 8px 24px 18px; }
+      .region { display: grid; grid-template-columns: 100px 1fr 72px 76px; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+      .region:last-child { border-bottom: 0; }
+      .region strong { font-size: 14px; }
+      .region small { color: var(--muted); font-size: 11px; }
+      .risk-track { height: 8px; background: #e9eeeb; }
+      .risk-fill { height: 100%; background: var(--orange); }
+      .region b { font-size: 14px; text-align: right; }
+      .action { color: var(--teal); font-size: 12px; font-weight: 700; text-align: right; }
+      footer { display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: stretch; }
+      .flow { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; background: var(--ink); color: #fff; border-radius: 8px; overflow: hidden; }
+      .step { position: relative; padding: 18px 24px; border-right: 1px solid #406065; }
+      .step:last-child { border-right: 0; }
+      .step span { display: block; color: #a9c2c3; font-size: 11px; }
+      .step b { display: block; margin-top: 5px; font-size: 15px; }
+      .disclosure { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 16px 18px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+      .disclosure b { color: var(--ink); display: block; margin-bottom: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="board">
+      <header>
+        <div class="brand">
+          <div class="mark">北</div>
+          <div>
+            <h1>北斗时空感知持续学习技术与低空无人机巡检系统</h1>
+            <p>北斗巡知 · 类别增量学习 · 时空局部诊断 · 重点区域复飞</p>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge live">公开数据实验</span>
+          <span class="badge">研发试制阶段</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="panel map-panel">
+          <div class="panel-head">
+            <div><span class="eyebrow">BEIDOU SPATIOTEMPORAL ROUTE</span><h2>虚拟北斗巡检航线与区域风险</h2></div>
+            <small>8个地理区域 · 坐标与航线为虚拟仿真</small>
+          </div>
+          <div class="map">
+            <div class="zones" id="zones"></div>
+            <svg class="route" viewBox="0 0 800 420" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="90,100 275,100 475,100 690,100 690,320 475,320 275,320 90,320" />
+              <circle cx="90" cy="100" r="8" /><circle cx="275" cy="100" r="8" /><circle cx="475" cy="100" r="8" /><circle cx="690" cy="100" r="8" />
+              <circle cx="690" cy="320" r="8" /><circle cx="475" cy="320" r="8" /><circle cx="275" cy="320" r="8" /><circle cx="90" cy="320" r="8" />
+            </svg>
+            <div class="drone">▲</div>
+            <div class="north">N ↑</div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><span>三层方法最终准确率</span><b id="primaryAccuracy">—</b><small>代表性Seed公开结果</small></div>
+            <div class="metric"><span>相较ER提升</span><b id="uplift">—</b><small>同协议、同预算</small></div>
+            <div class="metric"><span>固定回放预算</span><b id="budget">—</b><small>分配总量守恒</small></div>
+          </div>
+        </section>
+
+        <div class="right">
+          <section class="panel">
+            <div class="panel-head">
+              <div><span class="eyebrow">METHOD COMPARISON</span><h2>持续学习方法对比</h2></div>
+              <small>VisDrone目标裁剪分类</small>
+            </div>
+            <div class="methods" id="methods"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head">
+              <div><span class="eyebrow">LOCATION DIAGNOSTICS</span><h2>高风险区域与复飞建议</h2></div>
+              <small>按区域风险排序</small>
+            </div>
+            <div class="regions" id="regions"></div>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <div class="flow">
+          <div class="step"><span>01</span><b>航拍图像采集</b></div>
+          <div class="step"><span>02</span><b>北斗时空绑定</b></div>
+          <div class="step"><span>03</span><b>类别增量更新</b></div>
+          <div class="step"><span>04</span><b>区域风险诊断</b></div>
+          <div class="step"><span>05</span><b>重点复飞复核</b></div>
+        </div>
+        <div class="disclosure"><b>证据边界</b>指标来自公开航拍数据实验；北斗坐标、航线与定位扰动为虚拟仿真，不代表真实外业、机载部署或商业客户效果。</div>
+      </footer>
+    </div>
+
+    <script>
+      const pct = value => value == null ? "—" : `${(value * 100).toFixed(2)}%`;
+      const riskLevel = value => value >= .5 ? "critical" : value >= .4 ? "high" : value >= .28 ? "watch" : "normal";
+
+      fetch("../data_contract/public_result.json")
+        .then(response => response.json())
+        .then(result => {
+          const methods = result.methods;
+          const primary = methods.find(item => item.name === result.primary_method);
+          const comparator = methods.find(item => item.name !== result.primary_method);
+          document.getElementById("primaryAccuracy").textContent = pct(primary.average_accuracy);
+          document.getElementById("uplift").textContent = `+${((primary.average_accuracy - comparator.average_accuracy) * 100).toFixed(2)}pp`;
+          document.getElementById("budget").textContent = `${result.budget.total}`;
+
+          document.getElementById("methods").innerHTML = methods.map(item => `
+            <div class="method ${item.name === result.primary_method ? "primary" : ""}">
+              <label>${item.name}</label>
+              <div class="track"><div class="bar" style="width:${item.average_accuracy * 100}%"></div></div>
+              <b>${pct(item.average_accuracy)}</b>
+            </div>
+          `).join("") + `
+            <div class="uplift"><span>固定600样本预算下，主方法相较ER</span><b>+${((primary.average_accuracy - comparator.average_accuracy) * 100).toFixed(2)}pp</b></div>
+          `;
+
+          const byId = [...result.locations].sort((a, b) => a.location_id.localeCompare(b.location_id));
+          document.getElementById("zones").innerHTML = byId.map(item => `
+            <div class="zone" data-level="${riskLevel(item.risk)}">
+              <i></i><strong>${item.location_id} · ${item.name}</strong>
+              <span>风险 ${item.risk.toFixed(3)} · 预算 ${item.replay_budget}</span>
+            </div>
+          `).join("");
+
+          const highRisk = [...result.locations].sort((a, b) => b.risk - a.risk).slice(0, 4);
+          document.getElementById("regions").innerHTML = highRisk.map(item => `
+            <div class="region">
+              <div><strong>${item.name}</strong><small>${item.location_id} · ${item.sample_count}条</small></div>
+              <div class="risk-track"><div class="risk-fill" style="width:${Math.min(100, item.risk * 200)}%"></div></div>
+              <b>${pct(item.forgetting)}</b>
+              <div class="action">预算 ${item.replay_budget}</div>
+            </div>
+          `).join("");
+          document.body.dataset.ready = "true";
+        });
+    </script>
+  </body>
+</html>

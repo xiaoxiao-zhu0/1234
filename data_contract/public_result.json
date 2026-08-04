@@ -1,0 +1,171 @@
+{
+  "contract_version": "1.0",
+  "release_id": "visdrone-main-seed20260803-v1",
+  "generated_at": "2026-08-04T17:37:27+08:00",
+  "evidence_status": "prediction_backed",
+  "primary_method": "三层因果语义回放",
+  "dataset": {
+    "name": "VisDrone-DET目标裁剪分类 + 模拟北斗坐标（10类5任务）",
+    "metadata_count": 4301,
+    "prediction_count": 4301,
+    "class_count": 10,
+    "task_count": 5
+  },
+  "budget": {
+    "total": 600,
+    "allocated_sum": 600
+  },
+  "methods": [
+    {
+      "name": "ER经验回放",
+      "average_accuracy": 0.314811,
+      "macro_accuracy": 0.372721,
+      "average_forgetting": 0.513232
+    },
+    {
+      "name": "三层因果语义回放",
+      "average_accuracy": 0.435945,
+      "macro_accuracy": 0.433328,
+      "average_forgetting": 0.320917
+    }
+  ],
+  "quality": {
+    "status": "competition_candidate",
+    "recommended_for_bp": true,
+    "chance_accuracy": 0.1,
+    "primary_accuracy": 0.435945,
+    "best_comparator_accuracy": 0.314811,
+    "primary_delta_vs_best_comparator": 0.12113400000000002
+  },
+  "locations": [
+    {
+      "location_id": "G02",
+      "name": "山区边坡",
+      "sample_count": 526,
+      "accuracy": 0.418251,
+      "previous_accuracy": 0.754678,
+      "forgetting": 0.336427,
+      "position_error_mean_m": 9.7267,
+      "position_quality_mean": 0.7402,
+      "instability": 0.478033,
+      "business_consequence": 0.93,
+      "risk": 0.444571,
+      "replay_budget": 92,
+      "recommended_action": "优先补采 + 增量更新",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G01",
+      "name": "输电走廊",
+      "sample_count": 619,
+      "accuracy": 0.455574,
+      "previous_accuracy": 0.751313,
+      "forgetting": 0.29574,
+      "position_error_mean_m": 9.7425,
+      "position_quality_mean": 0.7381,
+      "instability": 0.461077,
+      "business_consequence": 0.96,
+      "risk": 0.442634,
+      "replay_budget": 91,
+      "recommended_action": "优先补采 + 增量更新",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G07",
+      "name": "施工扰动区",
+      "sample_count": 494,
+      "accuracy": 0.384615,
+      "previous_accuracy": 0.751121,
+      "forgetting": 0.366506,
+      "position_error_mean_m": 10.1668,
+      "position_quality_mean": 0.7284,
+      "instability": 0.496826,
+      "business_consequence": 0.88,
+      "risk": 0.437207,
+      "replay_budget": 87,
+      "recommended_action": "优先补采 + 增量更新",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G06",
+      "name": "通信塔区",
+      "sample_count": 531,
+      "accuracy": 0.453861,
+      "previous_accuracy": 0.743158,
+      "forgetting": 0.289297,
+      "position_error_mean_m": 9.4749,
+      "position_quality_mean": 0.7471,
+      "instability": 0.453299,
+      "business_consequence": 0.9,
+      "risk": 0.407969,
+      "replay_budget": 80,
+      "recommended_action": "优先补采 + 增量更新",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G03",
+      "name": "河谷跨越",
+      "sample_count": 503,
+      "accuracy": 0.397614,
+      "previous_accuracy": 0.718404,
+      "forgetting": 0.320789,
+      "position_error_mean_m": 9.6177,
+      "position_quality_mean": 0.7399,
+      "instability": 0.470289,
+      "business_consequence": 0.86,
+      "risk": 0.404448,
+      "replay_budget": 79,
+      "recommended_action": "优先补采 + 增量更新",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G05",
+      "name": "光伏场站",
+      "sample_count": 630,
+      "accuracy": 0.463492,
+      "previous_accuracy": 0.784965,
+      "forgetting": 0.321473,
+      "position_error_mean_m": 9.1005,
+      "position_quality_mean": 0.7545,
+      "instability": 0.461821,
+      "business_consequence": 0.82,
+      "risk": 0.378694,
+      "replay_budget": 73,
+      "recommended_action": "进入重点观察清单",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G04",
+      "name": "城郊围栏",
+      "sample_count": 503,
+      "accuracy": 0.45328,
+      "previous_accuracy": 0.765766,
+      "forgetting": 0.312485,
+      "position_error_mean_m": 9.4323,
+      "position_quality_mean": 0.7488,
+      "instability": 0.463022,
+      "business_consequence": 0.71,
+      "risk": 0.328746,
+      "replay_budget": 62,
+      "recommended_action": "进入重点观察清单",
+      "evidence_status": "prediction_backed"
+    },
+    {
+      "location_id": "G08",
+      "name": "农田缓冲区",
+      "sample_count": 495,
+      "accuracy": 0.448485,
+      "previous_accuracy": 0.780822,
+      "forgetting": 0.332337,
+      "position_error_mean_m": 9.6674,
+      "position_quality_mean": 0.7394,
+      "instability": 0.475764,
+      "business_consequence": 0.42,
+      "risk": 0.199821,
+      "replay_budget": 36,
+      "recommended_action": "常规巡检",
+      "evidence_status": "prediction_backed"
+    }
+  ],
+  "disclosure": "模型指标仅对应所列公开数据、任务划分和固定回放预算；北斗坐标与航线为虚拟仿真，不代表真实外业、机载部署或商业客户效果。该版本已通过主方法优于对比方法的自动门槛。"
+}

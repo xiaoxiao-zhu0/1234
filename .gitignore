@@ -1,0 +1,34 @@
+# Local runtimes and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+.coverage
+*.log
+
+# OS and editor metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Private training artifacts must never enter this display repository
+rbcl/
+competition_results/
+checkpoints/
+weights/
+datasets/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+predictions*.jsonl
+training_summary.json
+location_diagnostics.json
+
+# Temporary archives and exports
+*.tmp
+*.bak
+*.zip

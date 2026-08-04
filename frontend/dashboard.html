@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="北斗巡知公开实验结果看板" />
+    <link rel="icon" href="data:," />
+    <title>北斗巡知｜公开结果看板</title>
+    <link rel="stylesheet" href="./dashboard.css" />
+  </head>
+  <body>
+    <div class="evidence" id="evidence">正在核验公开结果文件…</div>
+    <header>
+      <div>
+        <span class="kicker">BEIDOU INSIGHT · PUBLIC EVIDENCE</span>
+        <h1>时空局部诊断<br /><em>公开结果看板</em></h1>
+        <p>页面只读取白名单JSON，不包含模型、损失函数、回放采样、权重或训练环境。</p>
+      </div>
+      <nav><a href="./index.html">进入仿真交互页</a></nav>
+    </header>
+
+    <main>
+      <section class="summary-grid" aria-label="数据摘要">
+        <article><span>数据集</span><b id="datasetName">—</b><small id="releaseId">—</small></article>
+        <article><span>观测 / 预测</span><b id="sampleCounts">—</b><small>公开接口计数</small></article>
+        <article><span>类别 / 任务</span><b id="taskCounts">—</b><small>类别增量任务流</small></article>
+        <article><span>回放预算</span><b id="budgetTotal">—</b><small id="budgetCheck">等待核验</small></article>
+      </section>
+
+      <section class="panel">
+        <div class="heading"><div><span class="kicker">METHOD COMPARISON</span><h2>方法级指标</h2></div><small>空值表示尚无真实模型证据</small></div>
+        <div class="methods" id="methods"></div>
+      </section>
+
+      <section class="panel">
+        <div class="heading"><div><span class="kicker">LOCATION-SPECIFIC DIAGNOSTICS</span><h2>区域诊断</h2></div><small>按风险从高到低</small></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>区域</th><th>样本</th><th>识别率</th><th>遗忘率</th><th>风险</th><th>预算</th><th>建议</th></tr></thead>
+            <tbody id="locations"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="disclosure"><b>证据边界</b><p id="disclosure">—</p></section>
+    </main>
+    <script type="module" src="./dashboard.mjs"></script>
+  </body>
+</html>

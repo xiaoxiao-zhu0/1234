@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Beidou inspection public result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "release_id", "generated_at", "evidence_status", "primary_method", "dataset", "budget", "methods", "locations", "disclosure"],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "release_id": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "minLength": 1},
+    "evidence_status": {"enum": ["simulation_only", "position_only", "prediction_backed"]},
+    "primary_method": {"type": "string", "minLength": 1},
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "metadata_count", "prediction_count", "class_count", "task_count"],
+      "properties": {
+        "name": {"type": "string"},
+        "metadata_count": {"type": "integer", "minimum": 0},
+        "prediction_count": {"type": "integer", "minimum": 0},
+        "class_count": {"type": "integer", "minimum": 0},
+        "task_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "allocated_sum"],
+      "properties": {
+        "total": {"type": "integer", "minimum": 1},
+        "allocated_sum": {"type": "integer", "minimum": 1}
+      }
+    },
+    "methods": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "average_accuracy", "average_forgetting"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "average_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "macro_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "average_forgetting": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "recommended_for_bp", "chance_accuracy", "primary_accuracy", "best_comparator_accuracy", "primary_delta_vs_best_comparator"],
+      "properties": {
+        "status": {"enum": ["competition_candidate", "diagnostic_only"]},
+        "recommended_for_bp": {"type": "boolean"},
+        "chance_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "primary_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "best_comparator_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "primary_delta_vs_best_comparator": {"type": ["number", "null"], "minimum": -1, "maximum": 1}
+      }
+    },
+    "locations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["location_id", "name", "sample_count", "accuracy", "previous_accuracy", "forgetting", "position_error_mean_m", "position_quality_mean", "instability", "business_consequence", "risk", "replay_budget", "recommended_action", "evidence_status"],
+        "properties": {
+          "location_id": {"type": "string", "pattern": "^G[0-9]{2}$"},
+          "name": {"type": "string"},
+          "sample_count": {"type": "integer", "minimum": 0},
+          "accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "previous_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "forgetting": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "position_error_mean_m": {"type": ["number", "null"], "minimum": 0},
+          "position_quality_mean": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "instability": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "business_consequence": {"type": "number", "minimum": 0, "maximum": 1},
+          "risk": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "replay_budget": {"type": ["integer", "null"], "minimum": 0},
+          "recommended_action": {"type": ["string", "null"]},
+          "evidence_status": {"enum": ["simulation_only", "position_only", "prediction_backed"]}
+        }
+      }
+    },
+    "disclosure": {"type": "string", "minLength": 1}
+  }
+}
