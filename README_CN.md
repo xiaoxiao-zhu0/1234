@@ -37,6 +37,8 @@ http://127.0.0.1:8766/frontend/
 
 本目录已经设计为独立私有Git仓库：算法负责人只更新`data_contract/`中的正式结果，队员主要更新`frontend/`、`assets/`、`docs/`和`tests/`。首次连接GitHub及后续同步命令见`docs/GIT_COLLABORATION_CN.md`。
 
+GitHub地址：`https://github.com/xiaoxiao-zhu0/1234.git`
+
 ## 队员可直接使用的提示词
 
 > 请遵守根目录AGENTS.md，只优化frontend、assets、docs和前端测试。数据来自data_contract中的公开JSON。不得实现或推测私有持续学习算法，不得生成虚假指标，不得删除证据状态与披露说明。

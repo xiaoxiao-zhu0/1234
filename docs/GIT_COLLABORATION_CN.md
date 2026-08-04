@@ -2,6 +2,8 @@
 
 本目录是独立的展示仓库，不是论文或训练仓库。GitHub仓库必须设为Private，只邀请项目成员。
 
+当前仓库：`https://github.com/xiaoxiao-zhu0/1234.git`
+
 ## 一、目录所有权
 
 算法负责人负责：
@@ -24,7 +26,7 @@
 在GitHub创建空的Private仓库，不勾选README、`.gitignore`或License。然后在本目录运行：
 
 ```powershell
-git remote add origin <GitHub仓库地址>
+git remote add origin https://github.com/xiaoxiao-zhu0/1234.git
 git push -u origin main
 ```
 
@@ -37,8 +39,8 @@ git remote -v
 ## 三、队员获取项目
 
 ```powershell
-git clone <GitHub仓库地址>
-cd <仓库目录>
+git clone https://github.com/xiaoxiao-zhu0/1234.git
+cd 1234
 python serve.py --port 8766
 ```
 
