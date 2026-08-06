@@ -138,10 +138,75 @@ const routeAnchors = [
   [39, 65], [26, 84], [14, 67], [5, 88],
 ];
 
-const labels = [
-  "杆塔", "绝缘子", "裂隙", "落石", "桥墩", "护栏", "车辆", "围栏",
-  "面板", "热斑", "通信塔", "线缆", "工程车", "违建", "农机", "道路",
-];
+const observationFramesByRegion = {
+  G01: {
+    image: "../assets/aerial/real-scenes/g01-power-corridor.jpg",
+    sourceName: "Valokas · Wikimedia Commons · CC BY-SA 4.0",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Aerial_view_of_Porvoo_Ilola_electricity_pylons.jpg",
+    targetClass: "power_pylon",
+    targetName: "输电杆塔",
+    boxes: [{ x: 21, y: 41, width: 10, height: 36, label: "杆塔" }],
+  },
+  G02: {
+    image: "../assets/aerial/real-scenes/g02-mountain-landslide.jpg",
+    sourceName: "James St. John · Wikimedia Commons · Public domain",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Mud_Creek_Landslide_(southeast_of_Gorda,_California,_USA).jpg",
+    targetClass: "landslide",
+    targetName: "滑坡区域",
+    boxes: [{ x: 27, y: 5, width: 51, height: 80, label: "滑坡" }],
+  },
+  G03: {
+    image: "../assets/aerial/real-scenes/g03-river-bridge.jpg",
+    sourceName: "Bob Tan · Wikimedia Commons · CC BY 4.0",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Aerial_perspective_of_the_bridge_across_Dongshan_river.jpg",
+    targetClass: "bridge",
+    targetName: "跨河桥梁",
+    boxes: [{ x: 19, y: 33, width: 63, height: 20, label: "桥梁" }],
+  },
+  G04: {
+    image: "../assets/aerial/visdrone-road-observation.jpg",
+    sourceName: "VisDrone公开数据集样例",
+    sourceUrl: "https://github.com/VisDrone/VisDrone-Dataset",
+    targetClass: "vehicle",
+    targetName: "周界车辆",
+    boxes: [
+      { x: 31, y: 36, width: 11, height: 23, label: "车辆" },
+      { x: 44, y: 51, width: 8, height: 13, label: "车辆" },
+    ],
+  },
+  G05: {
+    image: "../assets/aerial/real-scenes/g05-solar-farm.jpg",
+    sourceName: "Saiphani02 · Wikimedia Commons · CC BY-SA 4.0",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Solar_farm_at_Krishnapuram_Tatipudi_Water_Works_aerial_view_01.jpg",
+    targetClass: "solar_panel",
+    targetName: "光伏面板阵列",
+    boxes: [{ x: 6, y: 43, width: 84, height: 49, label: "面板阵列" }],
+  },
+  G06: {
+    image: "../assets/aerial/real-scenes/g06-communication-tower.jpg",
+    sourceName: "Forest & Kim Starr · Wikimedia Commons · CC BY 3.0 US",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Starr-180305-2355-Acacia_mearnsii-aerial_view_communication_towers-Ulupalakua-Maui_(40524562164).jpg",
+    targetClass: "communication_tower",
+    targetName: "通信塔",
+    boxes: [{ x: 42, y: 35, width: 12, height: 27, label: "通信塔" }],
+  },
+  G07: {
+    image: "../assets/aerial/real-scenes/g07-construction-zone.jpg",
+    sourceName: "日本国土交通省 · Wikimedia Commons · Attribution",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Aerial_photo_of_construction_site_of_Akabanedai_tunnel.jpg",
+    targetClass: "construction_site",
+    targetName: "施工扰动区域",
+    boxes: [{ x: 21, y: 30, width: 58, height: 38, label: "施工区" }],
+  },
+  G08: {
+    image: "../assets/aerial/real-scenes/g08-farmland.jpg",
+    sourceName: "BahabarAdenArchives · Wikimedia Commons · CC BY 4.0",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Aerial_view_of_the_river_and_farmland_in_Agabar,_Somaliland_20_April_2024.jpg",
+    targetClass: "farmland",
+    targetName: "农田与河道",
+    boxes: [{ x: 1, y: 17, width: 54, height: 67, label: "农田" }],
+  },
+};
 
 export function regionAt(x, y) {
   return regions.find((region) => {
@@ -167,12 +232,15 @@ export function buildRoutePoints() {
       const y = y1 + (y2 - y1) * ratio;
       const region = regionAt(x, y);
       const observedAt = new Date(start + index * 145000);
+      const observation = observationFramesByRegion[region?.id] ?? observationFramesByRegion.G04;
       points.push({
         id: `P${String(index + 1).padStart(2, "0")}`,
         x,
         y,
         trueRegionId: region?.id ?? "OUT",
-        label: labels[index % labels.length],
+        label: observation.targetName,
+        targetClass: observation.targetClass,
+        observation,
         newClass: index === 10 || index === 37,
         confidence: Math.max(0.48, (region?.currentAccuracy ?? 0.7) - 0.07 + ((index * 17) % 14) / 100),
         observedAt: observedAt.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),
@@ -184,12 +252,15 @@ export function buildRoutePoints() {
   }
   const [lastX, lastY] = routeAnchors.at(-1);
   const lastRegion = regionAt(lastX, lastY);
+  const observation = observationFramesByRegion[lastRegion?.id] ?? observationFramesByRegion.G04;
   points.push({
     id: `P${String(index + 1).padStart(2, "0")}`,
     x: lastX,
     y: lastY,
     trueRegionId: lastRegion?.id ?? "OUT",
-    label: labels[index % labels.length],
+    label: observation.targetName,
+    targetClass: observation.targetClass,
+    observation,
     newClass: false,
     confidence: lastRegion?.currentAccuracy ?? 0.7,
     observedAt: new Date(start + index * 145000).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),

@@ -140,7 +140,7 @@
           <div>
             <span class="section-kicker">SPATIOTEMPORAL RISK MAP</span>
             <h2>时空局部风险态势</h2>
-            <p>实线为受定位扰动影响后的观测航迹，虚线为仿真真值航迹；点击网格查看诊断。</p>
+            <p>沿航迹查看真实公开场景图片，并用虚拟北斗坐标定位区域风险；点击观测点或播放巡检过程。</p>
           </div>
           <div class="legend" aria-label="风险图例">
             <span><i class="low"></i>常规</span>
@@ -154,17 +154,60 @@
           <div class="map-card">
             <div class="map-toolbar">
               <div><span class="live-dot"></span><b>巡检架次 BD-20260803-01</b></div>
-              <span id="mapTimestamp">08:00—10:12 · 仿真</span>
+              <div class="map-playback-actions">
+                <button class="map-play-button" id="playPatrol" type="button" aria-pressed="false">
+                  <span id="playPatrolIcon" aria-hidden="true">▶</span><span id="playPatrolLabel">播放巡检</span>
+                </button>
+                <span id="mapTimestamp">08:00—10:12 · 仿真</span>
+              </div>
             </div>
             <svg id="patrolMap" viewBox="0 0 1000 680" role="img" aria-label="北斗无人机巡检航线与区域风险地图"></svg>
+            <div class="playback-strip">
+              <label for="playbackRange">航迹时序</label>
+              <input id="playbackRange" type="range" min="0" max="0" step="1" value="0" />
+              <output id="playbackCounter" for="playbackRange">P01 / 01</output>
+            </div>
             <div class="map-footer">
               <span><b>坐标系</b> WGS84（仿真）</span>
               <span><b>覆盖范围</b> 1.2 km × 0.8 km</span>
               <span><b>区域数</b> 8</span>
+              <span><b>影像来源</b> VisDrone / Wikimedia Commons</span>
             </div>
           </div>
 
-          <aside class="region-detail" id="regionDetail" aria-live="polite">
+          <div class="map-side-panel">
+            <article class="observation-card" aria-live="polite">
+              <div class="observation-heading">
+                <div>
+                  <span class="section-kicker">CURRENT OBSERVATION</span>
+                  <h3>当前航拍观测</h3>
+                </div>
+                <span class="evidence-badge">真实公开图片</span>
+              </div>
+              <div class="observation-media">
+                <img id="observationImage" alt="当前VisDrone公开航拍观测" />
+                <div class="observation-boxes" id="observationBoxes" aria-hidden="true"></div>
+                <span class="simulation-overlay">识别框、坐标与结果为仿真演示</span>
+              </div>
+              <div class="observation-primary">
+                <div><span id="observationPointId">P01</span><strong id="observationLabel">—</strong></div>
+                <strong id="observationConfidence">—</strong>
+              </div>
+              <dl class="observation-meta">
+                <div><dt>拍摄时间</dt><dd id="observationTime">—</dd></div>
+                <div><dt>虚拟北斗坐标</dt><dd id="observationCoordinate">—</dd></div>
+                <div><dt>区域关联</dt><dd id="observationRegion">—</dd></div>
+                <div><dt>位置状态</dt><dd id="observationAssociation">—</dd></div>
+              </dl>
+              <div class="observation-source">
+                <b>图片来源</b><a id="observationSource" href="#" target="_blank" rel="noreferrer">—</a>
+              </div>
+              <div class="observation-link-note">
+                <b>关联键</b><code id="observationLinkKey">sample_id + timestamp</code>
+              </div>
+            </article>
+
+            <aside class="region-detail" id="regionDetail" aria-live="polite">
             <div class="detail-top">
               <div>
                 <span class="region-id" id="selectedId">—</span>
@@ -189,7 +232,7 @@
 
             <div class="detail-stats">
               <div><span>区域识别率</span><strong id="selectedAccuracy">—</strong></div>
-              <div><span>回放配额</span><strong id="selectedBudget">—</strong></div>
+              <div><span>预算建议</span><strong id="selectedBudget">—</strong></div>
               <div><span>目标资产</span><strong id="selectedAssets">—</strong></div>
               <div><span>定位质量</span><strong id="selectedQuality">—</strong></div>
             </div>
@@ -199,7 +242,8 @@
               <strong id="selectedAction">—</strong>
               <p id="selectedClasses">—</p>
             </div>
-          </aside>
+            </aside>
+          </div>
         </div>
       </section>
 
@@ -223,7 +267,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th>区域</th><th>识别率</th><th>遗忘</th><th>位置错配</th><th>风险</th><th>回放配额</th><th>处置</th>
+                    <th>区域</th><th>识别率</th><th>遗忘</th><th>位置错配</th><th>风险</th><th>预算建议</th><th>处置</th>
                   </tr>
                 </thead>
                 <tbody id="diagnosticRows"></tbody>
@@ -233,10 +277,10 @@
 
           <aside class="budget-card">
             <div class="budget-heading">
-              <div><span class="section-kicker">BUDGET ALLOCATION</span><h3>风险预算调度</h3></div>
+              <div><span class="section-kicker">BUDGET SUGGESTION</span><h3>区域预算建议</h3></div>
               <strong id="budgetTotal">240</strong>
             </div>
-            <p>绿色为风险预算，灰色刻度为同总量均匀分配。</p>
+            <p>绿色为诊断建议，灰色刻度为同总量均匀分配；尚未作为正向训练结果。</p>
             <div class="budget-bars" id="budgetBars"></div>
             <div class="budget-summary">
               <span>前三高风险区获得</span>
@@ -264,7 +308,7 @@
           <i></i>
           <div><span>03</span><b>局部诊断</b><small>识别薄弱地理区域</small></div>
           <i></i>
-          <div><span>04</span><b>风险调度</b><small>分配回放与复飞资源</small></div>
+          <div><span>04</span><b>行动建议</b><small>提出预算与复飞资源建议</small></div>
         </div>
       </section>
 
@@ -272,7 +316,7 @@
         <div class="integrity-icon">i</div>
         <div>
           <b>证据边界说明</b>
-          <p>本页面验证的是北斗时空元数据接入、区域诊断、定位噪声影响和风险预算决策闭环；不宣称已完成真实外业、机载部署或未经公开结果文件支持的性能提升。</p>
+          <p>本页面验证的是北斗时空元数据接入、区域诊断、定位噪声影响和行动建议生成；场景图片来自VisDrone与Wikimedia Commons公开资料，坐标、航迹、识别框和识别结果为仿真，不宣称预算建议已提升训练性能。</p>
         </div>
       </section>
     </main>
