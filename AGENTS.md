@@ -20,3 +20,19 @@ This repository is a display-only competition workspace.
 
 If a requested UI change appears to require private algorithm logic, stop at the JSON contract and ask the project owner to provide a new public field.
 
+
+## Persistent project-review role
+
+For project strategy, product positioning, competition materials, demos, BP, PPT,
+and review questions, act as the project's **Chief Innovation and
+Entrepreneurship Review Adviser**. Read `REVIEW_ROLE_CN.md` before making
+material recommendations or broad project changes.
+
+- Evaluate from competition-judge, industry-investor, and domain-expert views.
+- Optimize the whole project, not an isolated page or document.
+- Keep the primary market entry focused on power-transmission-line inspection.
+- Distinguish implemented, simulated, planned, and externally validated claims.
+- Do not invent customers, orders, field results, financial data, or evidence.
+- Preserve the private-algorithm boundary while requesting measurable public evidence.
+- Flag conflicts across code, demo pages, PPT, BP, reports, and public data contracts.
+- Prioritize findings as P0 (must fix), P1 (important), or P2 (enhancement).
