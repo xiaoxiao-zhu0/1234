@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="北斗智巡输电线路巡检任务闭环演示" />
+    <title>北斗智巡｜输电线路任务闭环</title>
+    <link rel="stylesheet" href="./mission.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a href="./frontend/index.html" class="brand">北斗智巡 <span>输电线路巡检</span></a>
+      <nav><a href="#workflow">任务闭环</a><a href="#evidence">证据边界</a><a href="./frontend/dashboard.html">公开结果</a></nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">竞赛功能原型 · 输电线路首个应用场景</p>
+          <h1>从巡检航迹到<br /><em>可关闭的风险工单</em></h1>
+          <p class="lede">用北斗时间和位置把无人机影像、异常风险和人工复核串成一条可追踪的任务链。</p>
+          <div class="hero-tags"><span>仿真流程</span><span>公开结果契约</span><span>不含私有算法</span></div>
+        </div>
+        <aside class="mission-card"><span class="label">当前任务</span><strong>BD-20260815-XL-01</strong><small>华东试验线路 · 12.6 km · 8 个重点区域</small><button id="resetMission" type="button">重新开始任务</button></aside>
+      </section>
+
+      <section id="workflow" class="workflow-section">
+        <div class="section-heading"><p class="eyebrow">MISSION WORKFLOW</p><h2>一条任务，八个步骤</h2><p>点击步骤查看该环节的输入、输出和证据状态。</p></div>
+        <div class="workflow-layout">
+          <ol class="steps" id="steps"></ol>
+          <article class="step-detail" id="stepDetail" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section id="evidence" class="evidence-section">
+        <div class="section-heading"><p class="eyebrow">EVIDENCE REGISTER</p><h2>数据证据边界</h2><p>每个展示结果都明确说明来源，避免把仿真流程误写成现场验收结果。</p></div>
+        <div class="evidence-grid" id="evidenceGrid"></div>
+      </section>
+    </main>
+    <footer>北斗智巡 · 创新创业赛展示版 · 核心算法、训练源码与模型权重不在公开仓库</footer>
+    <script type="module" src="./mission.js"></script>
+  </body>
+</html>
